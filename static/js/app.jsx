@@ -4,58 +4,31 @@ const NUMBER_ATTRIBUTES = [1,2,3];
 const SHAPE_ATTRIBUTES = ['Diamond', 'Oval', 'Squiggle'];
 
 function Card(props) {
-    // return <div className="card">
-    //     props.card
-    // </div>
+    return <div className="card">
+        {props.numShapes} {props.fill} {props.color} {props.shape}
+    </div>
 
-    return(
-    <div className="card">
-    <svg>
-      <rect x={props.x} 
-      y={props.y} 
-      width={props.width} 
-      height={props.height} 
-      rx={props.rx} 
-      ry={props.ry} 
-      stroke="red" 
-      fill={props.fill} 
-      stroke-width="5"/>
-    </svg>
-    </div>)
+    
 }
 
 function SetCardGrid() {
     const [cards,updateCards] = React.useState(["loading..."])
-    const cards = [
-        <Card
-            key={1}
-            x="20"
-            y="90"
-            width="130"
-            height="50"
-            rx="20"
-            fill="transparent"
-          />,
-          <Card
-            key={2}
-            x="20"
-            y="90"
-            width="130"
-            height="50"
-            rx="20"
-            fill="solid"
-          />
-    ]
+    
     React.useEffect(() => {
         const newCards = []
+
         newCards.push(<Card
-                key={1}
-                x="20"
-                y="90"
-                width="130"
-                height="50"
-                rx="20"
-              />)
+                    numShapes='3'
+                    fill='slated'
+                    color='red'
+                    shape='oval'
+                    />)
+        // for (color in COLOR_ATTRIBUTES) {
+        //     for (fill in FILL_ATTRIBUTES){
+
+        //     }
+
+        // }
         updateCards(newCards)
         // fetch('/cards.json')
         // .then(response => response.json())
