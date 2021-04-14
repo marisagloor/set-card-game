@@ -9,48 +9,45 @@ function Card(props) {
 }
 
 function SetCardGrid() {
-    const [cards,updateCards] = React.useState(["loading..."])
+    const [cards,updateCards] = React.useState(["loading..."]);
+    const [cardsInPlay, updateCardsInPlay] = React.useState(["Click deal to start game..."]);
+    const [playing, updatePlaying] = React.useState(false)
     
-    React.useEffect(() => {
-
-
-        // newCards.push(<Card
-        //             numShapes='3'
-        //             fill='slated'
-        //             color='red'
-        //             shape='oval'
-        //             />)
-        // for (color in COLOR_ATTRIBUTES) {
-        //     for (fill in FILL_ATTRIBUTES){
-
-        //     }
-
-        // }
-        // updateCards(newCards)
-        fetch('/api/cards')
-        .then(response => response.json())
-        .then((data) => {
-          const cardlist = [];
-
-          for (const card of data) {
+    function dealCards (evt) {
+        const dealtCards = [];
+        const cardsToDeal = cards.slice(65);
+        for (const card of cardsToDeal) {
             const cardId = card.numShapes+card.color[0]+card.fill[0]+card.fill[1]+card.shape[0]+card.shape[1];
             console.log(card)
-            cardlist.push(<Card
+            dealtCards.push(<Card
                             key={cardId}
                             numShapes={card.numShapes}
                             fill={card.fill}
                             color={card.color}
                             shape={card.shape}
                             />)
-    
-          }
-          updateCards(cardlist)
-        })
+        }
+    updateCardsInPlay(dealtCards);
+    updatePlaying(true);
+    updateCards(cards.slice(0, 65))
+    }
+    // React.useEffect(() => {
+
+    // }, [cardsInPlay])
+
+    React.useEffect(() => {
+        fetch('/api/cards')
+        .then(response => response.json())
+        .then((data) => updateCards(data))
       }, [])
 
     return (
+        <div>
         <div id="cards">
-            {cards}
+            {cardsInPlay}
+        </div>
+        {playing ? null: <button onClick={dealCards}>Deal</button>}
+        
         </div>
     )
 }
@@ -59,3 +56,6 @@ ReactDOM.render(
     <SetCardGrid />,
     document.getElementById('app')
   );
+
+
+ 
