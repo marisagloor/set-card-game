@@ -1,7 +1,4 @@
-const COLOR_ATTRIBUTES = ['Red', 'Green', 'Purple'];
-const FILL_ATTRIBUTES = ['Solid', 'Slated', 'Empty'];
-const NUMBER_ATTRIBUTES = [1,2,3];
-const SHAPE_ATTRIBUTES = ['Diamond', 'Oval', 'Squiggle'];
+
 
 function Card(props) {
     return <div className="card">
