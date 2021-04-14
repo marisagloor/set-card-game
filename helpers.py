@@ -16,8 +16,9 @@ def generate_cards():
                for shape in SHAPE_ATTRIBUTES: 
                    cards.append({"color": color, 
                                 "fill": fill, 
-                                "num": num, 
+                                "numShapes": num, 
                                 "shape": shape})
         
     return cards
 
+print(f'CARDS = {generate_cards()}')
