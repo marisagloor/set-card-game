@@ -1,0 +1,30 @@
+#cards {
+    width: 800px;
+    margin: 100px auto;
+}
+
+div.card {
+    border-radius: 3px;
+    border: 3px solid black;
+    width: 8em;
+    height: 10em;
+    margin: 1em;
+    padding: 1em;
+    display: inline-block;
+  }
+  
+  body {
+    font-family: "Trebuchet MS", Helvetica, sans-serif
+  }
+
+  .Red {
+    color: red;
+  }
+
+  .Green {
+    color: green;
+  }
+  
+  .Purple {
+    color: darkslateblue;
+  }

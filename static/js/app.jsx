@@ -1,8 +1,9 @@
 
 
 function Card(props) {
-    return <div className="card">
-        {props.numShapes} {props.fill} {props.color} {props.shape}
+    const styles = `card ${props.color}`
+    return <div className={styles}>
+        {props.numShapes} {props.fill} {props.shape}
     </div>
 
     
