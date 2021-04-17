@@ -1,5 +1,8 @@
 #cards {
-    width: 800px;
+    /* display: grid;
+    grid-template-columns: 40px 50px auto 50px 40px;
+    grid-template-rows: 25% 100px auto; */
+    width: 1200px;
     margin: 100px auto;
 }
 
@@ -11,7 +14,15 @@ div.card {
     margin: 1em;
     padding: 1em;
     display: inline-block;
+    /* grid-column-start: 0;
+    grid-column-end: 6;
+    grid-row-start: 0;
+    grid-row-end: 3; */
   }
+
+.selected {
+    border-color : red !important
+}
   
   body {
     font-family: "Trebuchet MS", Helvetica, sans-serif
