@@ -1,41 +1,46 @@
-#cards {
-    /* display: grid;
-    grid-template-columns: 40px 50px auto 50px 40px;
-    grid-template-rows: 25% 100px auto; */
-    width: 1200px;
-    margin: 100px auto;
+
+svg {
+  width: 100px;
+  height: 50px;
+  overflow: unset;
+}
+
+.hide{
+  width: 0;
+  height: 0;
 }
 
 div.card {
-    border-radius: 3px;
-    border: 3px solid black;
-    width: 8em;
-    height: 10em;
-    margin: 1em;
-    padding: 1em;
-    display: inline-block;
-    /* grid-column-start: 0;
-    grid-column-end: 6;
-    grid-row-start: 0;
-    grid-row-end: 3; */
-  }
+  border-radius: 3px;
+  border: 3px solid black;
+  width: 8em;
+  height: 13em;
+  margin: 1em;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  /* grid-column-start: 0;
+  grid-column-end: 6;
+  grid-row-start: 0;
+  grid-row-end: 3; */
+}
+
+#cards {
+  /* display: grid;
+  grid-template-columns: 40px 50px auto 50px 40px;
+  grid-template-rows: 25% 100px auto; */
+  width: 1200px;
+  margin: 30px auto;
+  display: flex;
+  flex-flow: wrap;
+}
 
 .selected {
-    border-color : red !important
+  border-color: red !important;
 }
   
-  body {
-    font-family: "Trebuchet MS", Helvetica, sans-serif
-  }
-
-  .Red {
-    color: red;
-  }
-
-  .Green {
-    color: green;
-  }
-  
-  .Purple {
-    color: darkslateblue;
-  }
+body {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+}

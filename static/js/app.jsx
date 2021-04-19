@@ -1,12 +1,33 @@
-
-
 function Card(props) {
-    // {playing ? <button onClick={selectSet}
-    const styles = `card ${props.color} ${props.isSelected ? 'selected': null}`
-    return <div className={styles} 
+
+    const shapes = [];
+
+    for (let i = 0;  i < parseInt(props.numShapes); i++) {
+        // Oval, Diamond, and Squiggle from shapes.jsx
+        if (props.shape === "Oval") {
+            shapes.push(<Oval
+                        key={i}
+                        fill={props.fill}
+                        color={props.color}>
+                        </Oval>);
+        } else if (props.shape === "Diamond") {
+            shapes.push(<Diamond
+                        key={i}
+                        fill={props.fill}
+                        color={props.color}>
+                        </Diamond>);
+        } else if (props.shape == "Squiggle") {
+            shapes.push(<Squiggle
+                        key={i}
+                        fill={props.fill}
+                        color={props.color}>
+                        </Squiggle>);
+        } 
+    }
+    return <div className={`card ${props.isSelected ? 'selected': ''}`} 
                 id={props.id} 
                 onClick={props.onClick}>
-                {props.numShapes} {props.fill} {props.shape}
+                {shapes}
             </div>
 
     
@@ -20,9 +41,9 @@ function SetCardGrid() {
     const playing = !(cardsInPlay.length === 0);
 
     function dealCards (evt) {
-        const cardsToDeal = cards.slice(65);
+        const cardsToDeal = cards.slice(69);
         updateCardsInPlay(cardsToDeal);
-        updateCards(cards.slice(0, 65))
+        updateCards(cards.slice(0, 69))
     }
 
 
@@ -31,12 +52,13 @@ function SetCardGrid() {
         updateSelectedCards(selected);
         if (selected.length == 3) {
             if (checkSet(selected)){
-                removeValidSet()
-            } 
+                setTimeout(()=> {removeValidSet(selected);},500)
+            } else {
             setTimeout(()=> {
                 updateSelectedCards([]);
 
-            }, 100)
+            }, 1000)
+        }
         }
 
     }
@@ -56,11 +78,11 @@ function SetCardGrid() {
     }
 
 
-    function removeValidSet() {
+    function removeValidSet(selected) {
         const replacementCards = [];
         const newCards = cards.slice(cards.length-3);
         for (const card of cardsInPlay) {
-            if (selectedCards.includes(card)){
+            if (selected.includes(card)){
                 replacementCards.push(newCards.pop())
 
             } else {
@@ -69,27 +91,32 @@ function SetCardGrid() {
         }
         updateCards(cards.slice(0, cards.length-3));
         updateCardsInPlay(replacementCards);
+        updateSelectedCards([]);
     }
     
-    // React.useEffect(() => {
-
-    // }, [cardsInPlay])
 
     React.useEffect(() => {
         fetch('/api/cards')
         .then(response => response.json())
         .then((data) => updateCards(data))
       }, [])
+
+      
     if (!playing) {
         return <React.Fragment>
                 <button onClick={dealCards}>Deal</button>
-                    <div id="cards">   
-                        Click Deal to start game...
+                    <div id="cards">  
+                        {/* <TestCard  /> */}
+                        Click deal to start game...
                     </div>
                 </React.Fragment>
     }
     return (
             <div id="cards">
+                {/* SlatedPattern from shapes.jsx */}
+                <SlatedPattern color="Red"></SlatedPattern> 
+                <SlatedPattern color="Green"></SlatedPattern>
+                <SlatedPattern  color="Purple"></SlatedPattern>
                 {cardsInPlay.map(card => <Card
                             onClick={(evt) => selectCard(evt, card)}
                             isSelected={selectedCards.includes(card)}
