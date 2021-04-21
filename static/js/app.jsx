@@ -47,6 +47,38 @@ function SetCardGrid() {
     }
 
 
+    function addExtraCard(evt) {
+        if (cards.length>0){
+        updateCardsInPlay([...cardsInPlay, cards[cards.length - 1]])
+        updateCards(cards.slice(0, cards.length - 1))
+        } else {
+            alert("YOU WIN!!!!!! 🎆")
+        }
+    }
+
+    function validateBoard(evt) {
+        let needCard = true
+        loop1:
+        for (let i = 0;  i < cardsInPlay.length; i++ ){
+            for (let j = i+1; j < cardsInPlay.length; j++){
+                for (let k = j+1; k < cardsInPlay.length; k++){
+                    const potentialSet =[cardsInPlay[i],cardsInPlay[j],cardsInPlay[k]];
+                    if (checkSet(potentialSet)){
+                        needCard = false
+                        console.log(potentialSet, 'BREAK')
+                        break loop1;
+                    }
+                }
+            }
+        }
+        
+        if (needCard) {
+        addExtraCard()
+        } else {
+            alert("Really? 🤨 You don\'t need a card")
+        }
+    }
+
     function selectCard (evt, card) {
         const selected = [...selectedCards, card]
         updateSelectedCards(selected);
@@ -60,13 +92,25 @@ function SetCardGrid() {
             }, 1000)
         }
         }
+    }
 
+    function unselectCard(evt, card) {
+        
+        const remainingSelectedCards = [];
+        for (const selectedCard of selectedCards) {
+            if (selectedCard != card) {
+                remainingSelectedCards.push(selectedCard);
+            }
+        }
+        updateSelectedCards(remainingSelectedCards);
     }
 
 
     function checkSet(selected) {
         const attrs = ['numShapes', 'fill', 'color', 'shape'];
-
+        if (new Set(selected).size < 3){
+            return false
+        }
         for (const attr of attrs) {
             const cardAttrs = new Set([selected[0][attr],selected[1][attr],selected[2][attr]]);
 
@@ -80,16 +124,18 @@ function SetCardGrid() {
 
     function removeValidSet(selected) {
         const replacementCards = [];
-        const newCards = cards.slice(cards.length-3);
+        const numNewCards = 12 - cardsInPlay.length + 3
+        const newCards = cards.slice(cards.length-numNewCards);
         for (const card of cardsInPlay) {
             if (selected.includes(card)){
+                if (newCards.length > 0){
                 replacementCards.push(newCards.pop())
-
+                }
             } else {
                 replacementCards.push(card)
             }
         }
-        updateCards(cards.slice(0, cards.length-3));
+        updateCards(cards.slice(0, cards.length-numNewCards));
         updateCardsInPlay(replacementCards);
         updateSelectedCards([]);
     }
@@ -101,7 +147,7 @@ function SetCardGrid() {
         .then((data) => updateCards(data))
       }, [])
 
-      
+
     if (!playing) {
         return <React.Fragment>
                 <button onClick={dealCards}>Deal</button>
@@ -111,14 +157,16 @@ function SetCardGrid() {
                     </div>
                 </React.Fragment>
     }
-    return (
+    return (<React.Fragment>
+            {/* <button onClick={addExtraCard}>Add an additional card</button> */}
+            <button onClick={validateBoard}>Check for existence of sets</button>
             <div id="cards">
                 {/* SlatedPattern from shapes.jsx */}
                 <SlatedPattern color="Red"></SlatedPattern> 
                 <SlatedPattern color="Green"></SlatedPattern>
                 <SlatedPattern  color="Purple"></SlatedPattern>
                 {cardsInPlay.map(card => <Card
-                            onClick={(evt) => selectCard(evt, card)}
+                            onClick={selectedCards.includes(card)? (evt) => unselectCard(evt, card):(evt) => selectCard(evt, card)}
                             isSelected={selectedCards.includes(card)}
                             key={card.cardId}
                             id={card.cardId}
@@ -128,6 +176,7 @@ function SetCardGrid() {
                             shape={card.shape}
                             />)}
             </div>
+            </React.Fragment>
     )
 }
 
