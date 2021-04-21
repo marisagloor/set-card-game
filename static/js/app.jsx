@@ -147,6 +147,29 @@ function SetCardGrid() {
         .then((data) => updateCards(data))
       }, [])
 
+    React.useEffect(()=>{
+        if (cardsInPlay.length > 0){
+        let needCard = true
+        loop1:
+        for (let i = 0;  i < cardsInPlay.length; i++ ){
+            for (let j = i+1; j < cardsInPlay.length; j++){
+                for (let k = j+1; k < cardsInPlay.length; k++){
+                    const potentialSet =[cardsInPlay[i],cardsInPlay[j],cardsInPlay[k]];
+                    if (checkSet(potentialSet)){
+                        needCard = false
+                        console.log(potentialSet, 'BREAK')
+                        break loop1;
+                    }
+                }
+            }
+        }
+        
+        if (needCard) {
+        addExtraCard()
+        } 
+    }
+    },[cardsInPlay])
+
 
     if (!playing) {
         return <React.Fragment>
