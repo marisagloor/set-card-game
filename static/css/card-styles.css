@@ -5,13 +5,18 @@ svg {
   overflow: unset;
 }
 
+.squiggle {
+  height: 50px;
+  width: 100px
+}
+
 .hide{
   width: 0;
   height: 0;
 }
 
 .card {
-  border-radius: 3px;
+  border-radius: 15px;
   border: 3px solid black;
   width: 8em;
   height: 13em;
@@ -21,26 +26,44 @@ svg {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  /* grid-column-start: 0;
-  grid-column-end: 6;
-  grid-row-start: 0;
-  grid-row-end: 3; */
+  background-color: white
 }
 
 #cards {
-  /* display: grid;
-  grid-template-columns: 40px 50px auto 50px 40px;
-  grid-template-rows: 25% 100px auto; */
-  width: 1250px;
+  /* bg-image source: 
+  https://www.toptal.com/designers/subtlepatterns/retina-wood/ 
+  made by Alto Mo */
+  background-image: url('../images/table.png');
+  width: 1300px;
   margin: 30px auto;
+  padding: 2em 2em;
   display: flex;
   flex-flow: wrap;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 .selected {
-  border: 6px solid red;
+  border: 3px solid red;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5),
+              10px 10px 15px rgba(0,0,0,0.5),
+              -1px -1px 30px rgba(0,0,0,0.2);
 }
-  
+
+.rotated {
+  transform: rotate(90deg);
+  margin: auto 3em;
+}
+
+.selected.rotated {
+  box-shadow: 2px -2px 5px rgb(0 0 0 / 50%), 
+              10px -10px 15px rgb(0 0 0 / 50%), 
+              -1px 1px 30px rgb(0 0 0 / 20%);
+}
+
 body {
   font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
+
+

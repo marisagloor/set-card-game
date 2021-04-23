@@ -24,7 +24,7 @@ function Card(props) {
                         </Squiggle>);
         } 
     }
-    return <div className={`card ${props.isSelected ? 'selected': ''}`} 
+    return <div className={`card ${props.isSelected ? 'selected': ''} ${props.isRotated ? 'rotated': ''}`} 
                 id={props.id} 
                 onClick={props.onClick}>
                 {shapes}
@@ -37,13 +37,19 @@ function SetCardGrid() {
     const [cards,updateCards] = React.useState(["loading..."]);
     const [cardsInPlay, updateCardsInPlay] = React.useState([]);
     const [selectedCards, updateSelectedCards] = React.useState([]);
-
+    const [rotate, updateRotate] = React.useState(false);
     const playing = !(cardsInPlay.length === 0);
 
     function dealCards (evt) {
         const cardsToDeal = cards.slice(69);
         updateCardsInPlay(cardsToDeal);
         updateCards(cards.slice(0, 69))
+    }
+
+    function changeRotation(evt) {
+        console.log(rotate, rotate != false)
+        updateRotate(rotate != true);
+        
     }
 
 
@@ -55,29 +61,7 @@ function SetCardGrid() {
             alert("YOU WIN!!!!!! 🎆")
         }
     }
-
-    function validateBoard(evt) {
-        let needCard = true
-        loop1:
-        for (let i = 0;  i < cardsInPlay.length; i++ ){
-            for (let j = i+1; j < cardsInPlay.length; j++){
-                for (let k = j+1; k < cardsInPlay.length; k++){
-                    const potentialSet =[cardsInPlay[i],cardsInPlay[j],cardsInPlay[k]];
-                    if (checkSet(potentialSet)){
-                        needCard = false
-                        console.log(potentialSet, 'BREAK')
-                        break loop1;
-                    }
-                }
-            }
-        }
-        
-        if (needCard) {
-        addExtraCard()
-        } else {
-            alert("Really? 🤨 You don\'t need a card")
-        }
-    }
+                    
 
     function selectCard (evt, card) {
         const selected = [...selectedCards, card]
@@ -181,15 +165,19 @@ function SetCardGrid() {
                 </React.Fragment>
     }
     return (<React.Fragment>
-            {/* <button onClick={addExtraCard}>Add an additional card</button> */}
-            <button onClick={validateBoard}>Check for existence of sets</button>
+            <button onClick={changeRotation}>rotate cards</button>
+            {/* <button onClick={validateBoard}>Check for existence of sets</button> */}
+            {/* SlatedPattern from shapes.jsx */}
+                <SlatedPattern color="Red" squiggle={false}></SlatedPattern> 
+                <SlatedPattern color="Green" squiggle={false}></SlatedPattern>
+                <SlatedPattern  color="Purple" squiggle={false}></SlatedPattern>
+                <SlatedPattern color="Red" squiggle={true}></SlatedPattern> 
+                <SlatedPattern color="Green" squiggle={true}></SlatedPattern>
+                <SlatedPattern  color="Purple" squiggle={true}></SlatedPattern>
             <div id="cards">
-                {/* SlatedPattern from shapes.jsx */}
-                <SlatedPattern color="Red"></SlatedPattern> 
-                <SlatedPattern color="Green"></SlatedPattern>
-                <SlatedPattern  color="Purple"></SlatedPattern>
                 {cardsInPlay.map(card => <Card
                             onClick={selectedCards.includes(card)? (evt) => unselectCard(evt, card):(evt) => selectCard(evt, card)}
+                            isRotated={rotate}
                             isSelected={selectedCards.includes(card)}
                             key={card.cardId}
                             id={card.cardId}
