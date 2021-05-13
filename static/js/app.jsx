@@ -34,10 +34,12 @@ function Card(props) {
 }
 
 function SetCardGrid() {
+    const [cardsById, updateCardsById] = React.useState([]);
     const [cards,updateCards] = React.useState(["loading..."]);
     const [cardsInPlay, updateCardsInPlay] = React.useState([]);
     const [selectedCards, updateSelectedCards] = React.useState([]);
     const [rotate, updateRotate] = React.useState(false);
+    const [socket, updateSocket] = React.useState(io())
     const playing = !(cardsInPlay.length === 0);
 
     function dealCards (evt) {
@@ -64,7 +66,15 @@ function SetCardGrid() {
                     
 
     function selectCard (evt, card) {
-        const selected = [...selectedCards, card]
+        
+        socket.emit('clickCard', card);
+        
+    }
+
+    socket.on('selectCard', (res) => {
+        const card = res.card
+        console.log(res.card)
+        const selected = [...selectedCards, cardsById[card.cardId]]
         updateSelectedCards(selected);
         if (selected.length == 3) {
             if (checkSet(selected)){
@@ -76,7 +86,7 @@ function SetCardGrid() {
             }, 1000)
         }
         }
-    }
+    });
 
     function unselectCard(evt, card) {
         
@@ -91,6 +101,7 @@ function SetCardGrid() {
 
 
     function checkSet(selected) {
+        console.log(selected)
         const attrs = ['numShapes', 'fill', 'color', 'shape'];
         if (new Set(selected).size < 3){
             return false
@@ -124,16 +135,34 @@ function SetCardGrid() {
         updateSelectedCards([]);
     }
     
+    React.useEffect(()=>{
+        socket.on('connect', function() {
+            socket.emit('my event', {data: 'I\'m connected!'});
+        });
+    
+        socket.on('my response', (res) => {
+            console.log('hi')
+            alert(res)
+          });
+    }, [socket]);
 
     React.useEffect(() => {
         fetch('/api/cards')
         .then(response => response.json())
-        .then((data) => updateCards(data))
-      }, [])
+        .then((data) => {
+            updateCards(data);
+            const cards = {}
+            for (const card of data){
+                cards[card.cardId] = card
+            }
+            updateCardsById(cards);
+        })
+      }, []);
 
     React.useEffect(()=>{
         if (cardsInPlay.length > 0){
         let needCard = true
+        console.log(cardsInPlay)
         loop1:
         for (let i = 0;  i < cardsInPlay.length; i++ ){
             for (let j = i+1; j < cardsInPlay.length; j++){
