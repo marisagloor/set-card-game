@@ -39,7 +39,7 @@ td, th {
   https://www.toptal.com/designers/subtlepatterns/retina-wood/ 
   made by Alto Mo */
   background-image: url('../images/table.png');
-  width: 1300px;
+  max-width: 1300px;
   margin: 30px auto;
   padding: 2em 2em;
   display: flex;
