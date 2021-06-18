@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 
 @app.route('/')
+@app.route('/rules')
 def index():
     return render_template('root.html')
 

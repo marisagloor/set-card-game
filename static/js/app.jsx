@@ -1,184 +1,10 @@
-function Card(props) {
-
-    const shapes = [];
-
-    for (let i = 0;  i < parseInt(props.numShapes); i++) {
-        // Oval, Diamond, and Squiggle from shapes.jsx
-        if (props.shape === "Oval") {
-            shapes.push(<Oval
-                        key={i}
-                        fill={props.fill}
-                        color={props.color}>
-                        </Oval>);
-        } else if (props.shape === "Diamond") {
-            shapes.push(<Diamond
-                        key={i}
-                        fill={props.fill}
-                        color={props.color}>
-                        </Diamond>);
-        } else if (props.shape == "Squiggle") {
-            shapes.push(<Squiggle
-                        key={i}
-                        fill={props.fill}
-                        color={props.color}>
-                        </Squiggle>);
-        } 
-    }
-    return <div className={`card ${props.isSelected ? 'selected': ''} ${props.isRotated ? 'rotated': ''}`} 
-                id={props.id} 
-                onClick={props.onClick}>
-                {shapes}
-            </div>
-
-    
-}
-
-function SetCardGrid() {
-    const [cards,updateCards] = React.useState(["loading..."]);
-    const [cardsInPlay, updateCardsInPlay] = React.useState([]);
-    const [selectedCards, updateSelectedCards] = React.useState([]);
-    const [rotate, updateRotate] = React.useState(false);
-    const playing = !(cardsInPlay.length === 0);
-
-    function dealCards (evt) {
-        const cardsToDeal = cards.slice(69);
-        updateCardsInPlay(cardsToDeal);
-        updateCards(cards.slice(0, 69))
-    }
-
-    function changeRotation(evt) {
-        console.log(rotate, rotate != false)
-        updateRotate(rotate != true);
-        
-    }
-
-
-    function addExtraCard(evt) {
-        if (cards.length>0){
-        updateCardsInPlay([...cardsInPlay, cards[cards.length - 1]])
-        updateCards(cards.slice(0, cards.length - 1))
-        } else {
-            alert("YOU WIN!!!!!! 🎆")
-        }
-    }
-                    
-
-    function selectCard (evt, card) {
-        const selected = [...selectedCards, card]
-        updateSelectedCards(selected);
-        if (selected.length == 3) {
-            if (checkSet(selected)){
-                setTimeout(()=> {removeValidSet(selected);},500)
-            } else {
-            setTimeout(()=> {
-                updateSelectedCards([]);
-
-            }, 1000)
-        }
-        }
-    }
-
-    function unselectCard(evt, card) {
-        
-        const remainingSelectedCards = [];
-        for (const selectedCard of selectedCards) {
-            if (selectedCard != card) {
-                remainingSelectedCards.push(selectedCard);
-            }
-        }
-        updateSelectedCards(remainingSelectedCards);
-    }
-
-
-    function checkSet(selected) {
-        const attrs = ['numShapes', 'fill', 'color', 'shape'];
-        if (new Set(selected).size < 3){
-            return false
-        }
-        for (const attr of attrs) {
-            const cardAttrs = new Set([selected[0][attr],selected[1][attr],selected[2][attr]]);
-
-            if (cardAttrs.size != 1 && cardAttrs.size != 3){
-                return false
-            }
-        }
-        return true
-    }
-
-
-    function removeValidSet(selected) {
-        const replacementCards = [];
-        const numNewCards = 12 - cardsInPlay.length + 3
-        const newCards = cards.slice(cards.length-numNewCards);
-        for (const card of cardsInPlay) {
-            if (selected.includes(card)){
-                if (newCards.length > 0){
-                replacementCards.push(newCards.pop())
-                }
-            } else {
-                replacementCards.push(card)
-            }
-        }
-        updateCards(cards.slice(0, cards.length-numNewCards));
-        updateCardsInPlay(replacementCards);
-        updateSelectedCards([]);
-    }
-    
-
-    React.useEffect(() => {
-        fetch('/api/cards')
-        .then(response => response.json())
-        .then((data) => updateCards(data))
-      }, [])
-
-    React.useEffect(()=>{
-        if (cardsInPlay.length > 0){
-        let needCard = true
-        loop1:
-        for (let i = 0;  i < cardsInPlay.length; i++ ){
-            for (let j = i+1; j < cardsInPlay.length; j++){
-                for (let k = j+1; k < cardsInPlay.length; k++){
-                    const potentialSet =[cardsInPlay[i],cardsInPlay[j],cardsInPlay[k]];
-                    if (checkSet(potentialSet)){
-                        needCard = false
-                        console.log(potentialSet, 'BREAK')
-                        break loop1;
-                    }
-                }
-            }
-        }
-        
-        if (needCard) {
-        addExtraCard()
-        } 
-    }
-    },[cardsInPlay])
-
-
-    if (!playing) {
-        return <React.Fragment>
-                <button onClick={dealCards}>Deal</button>
-                    <div id="cards">  
-                        {/* <TestCard  /> */}
-                        Click deal to start game...
-                    </div>
-                </React.Fragment>
-    }
-    return (<React.Fragment>
-            <button onClick={changeRotation}>rotate cards</button>
-            {/* <button onClick={validateBoard}>Check for existence of sets</button> */}
-            {/* SlatedPattern from shapes.jsx */}
-                <SlatedPattern color="Red" squiggle={false}></SlatedPattern> 
-                <SlatedPattern color="Green" squiggle={false}></SlatedPattern>
-                <SlatedPattern  color="Purple" squiggle={false}></SlatedPattern>
-                <SlatedPattern color="Red" squiggle={true}></SlatedPattern> 
-                <SlatedPattern color="Green" squiggle={true}></SlatedPattern>
-                <SlatedPattern  color="Purple" squiggle={true}></SlatedPattern>
-            <div id="cards">
-                {cardsInPlay.map(card => <Card
-                            onClick={selectedCards.includes(card)? (evt) => unselectCard(evt, card):(evt) => selectCard(evt, card)}
-                            isRotated={rotate}
-                            isSelected={selectedCards.includes(card)}
+function PotentialSet(props) {
+    return <tr>
+        <td className="card-row">
+       {props.cards.map(card => <Card
+                            onClick={(evt)=>{alert(card)}}
+                            isRotated={false}
+                            isSelected={false}
                             key={card.cardId}
                             id={card.cardId}
                             numShapes={card.numShapes}
@@ -186,13 +12,82 @@ function SetCardGrid() {
                             color={card.color}
                             shape={card.shape}
                             />)}
-            </div>
-            </React.Fragment>
-    )
+    </td>
+    <td>
+        {props.reason}
+    </td>
+    </tr>
+}
+function Rules(){
+    return <React.Fragment>
+        <div className="cards">
+        <h3>New to the game or need a refresher on the rules?</h3>
+        <p>To play deal 12 cards onto the board and test your pattern matching skills to see how quickly you can pair 3 cards in a valid set.  Each card is made up of for 4 different attributes (shape, number of shapes, color, shading).  A valid set is made of three cards that are either all the same or all different in the four individual attributes.  </p>
+        <p>When you select 3 cards we will check if they form a valid set.  If they do, your set will be removed from the board and replaced with new cards.  If not your cards will be unselected.</p>
+        <p>An extra card will be added if needed. So there will always be a valid set on the board.  Keep making sets until you go through the deck of 81 cards!</p>
+        <h4>Some valid sets are shown below</h4>
+        <table>
+            <thead>
+            <tr>
+                <th>3 cards </th>
+                <th>Reasons</th>
+            </tr>
+            </thead>
+            <tbody>
+            {/* Globally defined in sampleSets.js */}
+            {VALIDSETS.map((validSet)=><PotentialSet
+                                            key={validSet.id}
+                                            cards={validSet.cards}
+                                            reason={validSet.reason}/>)}
+            </tbody>
+        </table>
+        </div>
+    </React.Fragment> 
+    
+}
+
+function App(){
+    return <React.Fragment>
+     {/* SlatedPattern from shapes.jsx */}
+     <SlatedPattern color="Red" squiggle={false}></SlatedPattern> 
+                <SlatedPattern color="Green" squiggle={false}></SlatedPattern>
+                <SlatedPattern  color="Purple" squiggle={false}></SlatedPattern>
+                <SlatedPattern color="Red" squiggle={true}></SlatedPattern> 
+                <SlatedPattern color="Green" squiggle={true}></SlatedPattern>
+                <SlatedPattern  color="Purple" squiggle={true}></SlatedPattern>
+    <ReactRouterDOM.BrowserRouter>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <ReactRouterDOM.NavLink
+          to="/"
+          activeClassName="navlink-active"
+          className="nav-link"
+        >
+          New Game
+        </ReactRouterDOM.NavLink>
+        <ReactRouterDOM.NavLink
+          to="/rules"
+          activeClassName="navlink-active"
+          className="nav-link"
+        >
+          Rules
+        </ReactRouterDOM.NavLink>
+      </nav>
+      
+
+      <div >
+        <ReactRouterDOM.Route exact path="/">
+          <SetCardGrid />
+        </ReactRouterDOM.Route>
+        <ReactRouterDOM.Route exact path="/rules">
+            <Rules />
+        </ReactRouterDOM.Route>
+      </div>
+    </ReactRouterDOM.BrowserRouter>
+    </React.Fragment>
 }
 
 ReactDOM.render(
-    <SetCardGrid />,
+    <App />,
     document.getElementById('app')
   );
 

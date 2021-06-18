@@ -5,6 +5,11 @@ svg {
   overflow: unset;
 }
 
+table,
+td, th {
+    border: 1px solid #333;
+}
+
 .squiggle {
   height: 50px;
   width: 100px
@@ -29,7 +34,7 @@ svg {
   background-color: white
 }
 
-#cards {
+#cards, .cards {
   /* bg-image source: 
   https://www.toptal.com/designers/subtlepatterns/retina-wood/ 
   made by Alto Mo */
@@ -37,6 +42,19 @@ svg {
   width: 1300px;
   margin: 30px auto;
   padding: 2em 2em;
+  display: flex;
+  flex-flow: wrap;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  
+}
+
+*, ::after, ::before{
+  box-sizing: content-box;
+}
+
+.card-row{
   display: flex;
   flex-flow: wrap;
   flex-direction: row;
