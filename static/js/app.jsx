@@ -47,6 +47,8 @@ function Rules(){
 }
 
 function App(){
+    const [rotation, updateRotation] = React.useState(false)
+
     return <React.Fragment>
      {/* SlatedPattern from shapes.jsx */}
      <SlatedPattern color="Red" squiggle={false}></SlatedPattern> 
@@ -71,12 +73,20 @@ function App(){
         >
           Rules
         </ReactRouterDOM.NavLink>
+        <div className="custom-control custom-switch ml-auto">
+            <input type="checkbox"
+                    className="custom-control-input" 
+                    id="rotationSwitch"
+                    onChange={()=>{updateRotation(rotation != true)}}/>
+            <label className="custom-control-label" htmlFor="rotationSwitch">card rotation</label>
+        </div>
       </nav>
       
 
       <div >
         <ReactRouterDOM.Route exact path="/">
-          <SetCardGrid />
+          <SetCardGrid 
+            rotation={rotation}/>
         </ReactRouterDOM.Route>
         <ReactRouterDOM.Route exact path="/rules">
             <Rules />

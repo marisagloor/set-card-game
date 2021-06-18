@@ -33,11 +33,10 @@ function Card(props) {
     
 }
 
-function SetCardGrid() {
+function SetCardGrid({rotation}) {
     const [cards,updateCards] = React.useState(["loading..."]);
     const [cardsInPlay, updateCardsInPlay] = React.useState([]);
     const [selectedCards, updateSelectedCards] = React.useState([]);
-    const [rotate, updateRotate] = React.useState(false);
     const playing = !(cardsInPlay.length === 0);
 
     React.useEffect(() => {
@@ -75,12 +74,6 @@ function SetCardGrid() {
         const cardsToDeal = cards.slice(69);
         updateCardsInPlay(cardsToDeal);
         updateCards(cards.slice(0, 69))
-    }
-
-    function changeRotation(evt) {
-        console.log(rotate, rotate != false)
-        updateRotate(rotate != true);
-        
     }
 
 
@@ -164,13 +157,10 @@ function SetCardGrid() {
                 </React.Fragment>
     } else {
     return (<React.Fragment>
-            <button onClick={changeRotation}>rotate cards</button>
-            {/* <button onClick={validateBoard}>Check for existence of sets</button> */}
-           
             <div id="cards">
                 {cardsInPlay.map(card => <Card
                             onClick={selectedCards.includes(card)? (evt) => unselectCard(evt, card):(evt) => selectCard(evt, card)}
-                            isRotated={rotate}
+                            isRotated={rotation}
                             isSelected={selectedCards.includes(card)}
                             key={card.cardId}
                             id={card.cardId}
