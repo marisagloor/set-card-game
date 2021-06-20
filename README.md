@@ -31,3 +31,4 @@ My goal in building this project was learning and getting more experience workin
 
 ## The game
 
+![Making a set](static/images/making-set.gif)
